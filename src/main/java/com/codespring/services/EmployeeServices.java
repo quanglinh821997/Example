@@ -13,9 +13,11 @@ public class EmployeeServices {
     @Autowired
     EmployeeRepo employeeRepo;
 
+
     public Employee insertEmployee(Employee emp){
         return employeeRepo.save(emp);
     }
+
 
     public List<Employee> getAllEmployee() {
         return employeeRepo.findAll();
@@ -28,4 +30,6 @@ public class EmployeeServices {
     public void deleteEmployeeById(Long id){
         employeeRepo.deleteById(id);
     }
+
+
 }
