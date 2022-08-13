@@ -33,7 +33,7 @@ public class EmployeeServices {
 
 
     public List<Employee> getEmployeeByMinutes() {
-        return (List<Employee>) employeeRepo.findEmployeeByMinutes();
+        return employeeRepo.findEmployeeByMinutes();
     }
 
 }

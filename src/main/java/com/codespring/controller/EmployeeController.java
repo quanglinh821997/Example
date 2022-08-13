@@ -28,6 +28,7 @@ public class EmployeeController {
     public Employee addEmployee(@RequestBody Employee emp){
 //        emailService.sendSimpleMail("quanglinh238297@gmail.com","Hello" + emp.getName(), "Demo");
         return employeeServices.insertEmployee(emp);
+
     }
 
     @GetMapping("/employee")
