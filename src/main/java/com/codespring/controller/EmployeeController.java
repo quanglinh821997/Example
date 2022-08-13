@@ -16,7 +16,7 @@ import java.util.List;
 @CrossOrigin
 public class EmployeeController {
 
-    @Autowired private EmailService emailService;
+//    @Autowired private EmailService emailService;
 
     @Autowired
     EmployeeServices employeeServices;
@@ -26,7 +26,7 @@ public class EmployeeController {
     // add Employee
     @PostMapping("/employee")
     public Employee addEmployee(@RequestBody Employee emp){
-        emailService.sendSimpleMail("quanglinh238297@gmail.com","Hello " + emp.getName(), "Demo");
+//        emailService.sendSimpleMail("quanglinh238297@gmail.com","Hello" + emp.getName(), "Demo");
         return employeeServices.insertEmployee(emp);
     }
 
