@@ -18,4 +18,6 @@ public class Employee {
     private String address;
     @Column(name = "created_at")
     private Date created_at;
+    @Column(name = "checkemail", columnDefinition = "INT(11) default '0'")
+    private int checkemail;
 }

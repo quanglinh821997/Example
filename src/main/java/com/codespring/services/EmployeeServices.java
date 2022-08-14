@@ -36,4 +36,14 @@ public class EmployeeServices {
         return employeeRepo.findEmployeeByMinutes();
     }
 
+    public void UpdateData() {
+        employeeRepo.UpdateData();
+    }
+
+    public List<Employee> getEmployeeByCheckEmail() {
+        return employeeRepo.findEmployeeByCheckEmail();
+    }
+
+
+
 }
