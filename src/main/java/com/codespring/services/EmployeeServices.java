@@ -37,7 +37,7 @@ public class EmployeeServices {
     }
 
     public void UpdateData() {
-        employeeRepo.UpdateData();
+        employeeRepo.updateData();
     }
 
     public List<Employee> getEmployeeByCheckEmail() {

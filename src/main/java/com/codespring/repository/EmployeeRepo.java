@@ -2,9 +2,10 @@ package com.codespring.repository;
 
 import com.codespring.model.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,10 +23,12 @@ public interface EmployeeRepo extends JpaRepository<Employee, Long> {
             nativeQuery = true)
     List<Employee> findEmployeeByCheckEmail();
 
+    @Transactional
+    @Modifying
     @Query(
-            value = "UPDATE employee SET employee.checkemail = 1 ;",
+            value = "UPDATE employee SET checkemail = 1 where checkemail = 0;",
             nativeQuery = true)
-    void UpdateData();
+    void updateData();
 
 
 }
