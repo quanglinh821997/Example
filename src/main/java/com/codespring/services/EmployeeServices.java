@@ -1,9 +1,12 @@
 package com.codespring.services;
 
+import com.codespring.dto.EmployeeDTO;
 import com.codespring.model.Employee;
 import com.codespring.repository.EmployeeRepo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,10 +26,13 @@ public class EmployeeServices {
         return employeeRepo.findAll();
     }
 
-    public Employee getByIdEmployee(Long id) {
+    @Transactional
+    public EmployeeDTO getByIdEmployee(Long id) {
         Employee employee = employeeRepo.findById(id).get();
         employee.setName("new name");
-        return employee;
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        BeanUtils.copyProperties(employee, employeeDTO);
+        return employeeDTO;
     }
 
     public void deleteEmployeeById(Long id){

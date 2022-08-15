@@ -27,7 +27,7 @@ public interface EmployeeRepo extends JpaRepository<Employee, Long> {
     @Transactional
     @Modifying
     @Query(
-            value = "UPDATE employee SET checkemail = 1 where checkemail = 0;",
+            value = "UPDATE employee SET checkemail = 1 ;",
             nativeQuery = true)
     void updateData();
 

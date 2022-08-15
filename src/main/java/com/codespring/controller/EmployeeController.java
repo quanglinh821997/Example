@@ -3,6 +3,7 @@ package com.codespring.controller;
 //import com.codespring.model.EmailDetails;
 
 import com.codespring.cron.TutorialScheduler;
+import com.codespring.dto.EmployeeDTO;
 import com.codespring.model.Employee;
 import com.codespring.services.EmailService;
 import com.codespring.services.EmployeeServices;
@@ -37,7 +38,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/employee/{id}")
-    public Employee getByIdEmployee(@PathVariable("id") Long id){
+    public EmployeeDTO getByIdEmployee(@PathVariable("id") Long id){
         return employeeServices.getByIdEmployee(id);
     }
 
