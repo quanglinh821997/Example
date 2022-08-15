@@ -24,7 +24,9 @@ public class EmployeeServices {
     }
 
     public Employee getByIdEmployee(Long id) {
-        return employeeRepo.findById(id).get();
+        Employee employee = employeeRepo.findById(id).get();
+        employee.setName("new name");
+        return employee;
     }
 
     public void deleteEmployeeById(Long id){
@@ -36,7 +38,7 @@ public class EmployeeServices {
         return employeeRepo.findEmployeeByMinutes();
     }
 
-    public void UpdateData() {
+    public void updateData() {
         employeeRepo.updateData();
     }
 

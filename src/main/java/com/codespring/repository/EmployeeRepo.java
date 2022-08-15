@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
@@ -30,5 +31,5 @@ public interface EmployeeRepo extends JpaRepository<Employee, Long> {
             nativeQuery = true)
     void updateData();
 
-
+    Optional<Employee> findById(Long id);
 }

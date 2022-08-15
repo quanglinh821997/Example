@@ -18,7 +18,7 @@ public class TutorialScheduler {
     EmployeeServices employeeServices;
 
     @Scheduled(fixedRate = 120000L)
-    public void cheduleTaskUsingCronExpression() {
+    public void scheduleTaskUsingCronExpression() {
 //        var employees = employeeServices.getEmployeeByMinutes();
 //        if (employees.isEmpty()) {
 //            System.out.println(new Date() + " Employee List is Empty...");
@@ -36,7 +36,7 @@ public class TutorialScheduler {
                 emailService.sendSimpleMail("quanglinh238297@gmail.com", "Hello " + employee.getName(), "Demo");
             }
         }
-        employeeServices.UpdateData();
+        employeeServices.updateData();
     }
 }
 
