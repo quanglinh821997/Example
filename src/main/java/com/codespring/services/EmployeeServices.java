@@ -20,6 +20,7 @@ import java.util.List;
 @Service
 public class EmployeeServices {
 
+    @Autowired private ThreadPool2 threadPool2;
     @Autowired
     EmployeeRepo employeeRepo;
 
@@ -28,11 +29,13 @@ public class EmployeeServices {
 
     @Transactional
     public void insertEmployee(){
+        long startTime = System.currentTimeMillis();
         List<Employee> empList = new ArrayList<>();
         for (int i = 0; i < 1000; i++) {
-            empList.add(generateEmployee(i));
+            MyRunnable runnable = new MyRunnable(i,empList);
+            threadPool2.executeTask(runnable);
         }
-        long startTime = System.currentTimeMillis();
+
         insertAllEmployees(empList);
         long endTime = System.currentTimeMillis();
         System.out.println("Processing time: " + (endTime - startTime));
