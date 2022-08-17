@@ -2,7 +2,7 @@ package com.codespring.controller;
 
 //import com.codespring.model.EmailDetails;
 
-import com.codespring.cron.TutorialScheduler;
+//import com.codespring.cron.TutorialScheduler;
 import com.codespring.dto.EmployeeDTO;
 import com.codespring.model.Employee;
 import com.codespring.services.EmailService;
@@ -10,6 +10,8 @@ import com.codespring.services.EmployeeServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -26,10 +28,8 @@ public class EmployeeController {
 
     // add Employee
     @PostMapping("/employee")
-    public Employee addEmployee(@RequestBody Employee emp){
-//        emailService.sendSimpleMail("quanglinh238297@gmail.com","Hello" + emp.getName(), "Demo");
-        return employeeServices.insertEmployee(emp);
-
+    public void addEmployee(){
+        employeeServices.insertEmployee();
     }
 
     @GetMapping("/employee")
@@ -42,10 +42,10 @@ public class EmployeeController {
         return employeeServices.getByIdEmployee(id);
     }
 
-    @PutMapping("/employee")
-    public Employee updateEmployee(@RequestBody Employee emp){
-        return employeeServices.insertEmployee(emp);
-    }
+//    @PutMapping("/employee")
+//    public List<Employee> updateEmployee(@RequestBody List<Employee> emp){
+//        return employeeServices.insertEmployee(emp);
+//    }
 
     @DeleteMapping("/employee/{id}")
     public String deleteEmployee(@PathVariable Long id){

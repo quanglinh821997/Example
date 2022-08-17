@@ -1,6 +1,9 @@
 package com.codespring.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Time;
@@ -9,6 +12,9 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "employee")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Employee {
 
     @Id
