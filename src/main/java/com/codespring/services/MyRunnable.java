@@ -15,10 +15,6 @@ public class MyRunnable implements Runnable {
         this.employees = employees;
     }
 
-    public MyRunnable(int index) {
-        this.index = index;
-    }
-
     @Override
     public void run() {
 

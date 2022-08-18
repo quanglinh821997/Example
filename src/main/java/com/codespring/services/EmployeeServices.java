@@ -10,17 +10,21 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ParameterizedPreparedStatementSetter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.apache.commons.collections4.ListUtils;
+
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.*;
 
 @Service
 public class EmployeeServices {
 
-    @Autowired private ThreadPool2 threadPool2;
+    @Autowired
+    private ThreadPool2 threadPool2;
     @Autowired
     EmployeeRepo employeeRepo;
 
@@ -31,11 +35,9 @@ public class EmployeeServices {
     public void insertEmployee(){
         long startTime = System.currentTimeMillis();
         List<Employee> empList = new ArrayList<>();
-        for (int i = 0; i < 1000; i++) {
-            MyRunnable runnable = new MyRunnable(i,empList);
-            threadPool2.executeTask(runnable);
+        for (int i = 0; i < 5000; i++) {
+            empList.add(generateEmployee(i));
         }
-
         insertAllEmployees(empList);
         long endTime = System.currentTimeMillis();
         System.out.println("Processing time: " + (endTime - startTime));
@@ -50,8 +52,22 @@ public class EmployeeServices {
     }
 
     private void insertAllEmployees(List<Employee> employees) {
+        multiThreadInsert(employees);
 //        employeeRepo.saveAll(employees);
-        batchInsert(employees);
+//        batchInsert(employees);
+    }
+
+    private void multiThreadInsert(List<Employee> employees) {
+        List<List<Employee>> output = ListUtils.partition(employees, 10);
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
+        for (List<Employee> employeeList : output) {
+            executorService.execute(new Runnable() {
+                @Override
+                public void run() {
+                    employeeRepo.saveAll(employeeList);
+                }
+            });
+        }
     }
     private void batchInsert(List<Employee> employees) {
         jdbcTemplate.batchUpdate("insert into examplesp.employee (name, address) values(?,?)", new BatchPreparedStatementSetter() {
