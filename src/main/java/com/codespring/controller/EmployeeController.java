@@ -3,15 +3,13 @@ package com.codespring.controller;
 //import com.codespring.model.EmailDetails;
 
 //import com.codespring.cron.TutorialScheduler;
+
 import com.codespring.dto.EmployeeDTO;
 import com.codespring.model.Employee;
-import com.codespring.services.EmailService;
 import com.codespring.services.EmployeeServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -28,8 +26,9 @@ public class EmployeeController {
 
     // add Employee
     @PostMapping("/employee")
-    public void addEmployee(){
-        employeeServices.insertEmployee();
+    public void addEmployee(@RequestParam int size,
+                            @RequestParam int type){
+        employeeServices.insertEmployee(size, type);
     }
 
     @GetMapping("/employee")

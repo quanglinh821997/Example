@@ -3,6 +3,7 @@ package com.codespring.services;
 import com.codespring.dto.EmployeeDTO;
 import com.codespring.model.Employee;
 import com.codespring.repository.EmployeeRepo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
@@ -21,10 +22,9 @@ import java.util.List;
 import java.util.concurrent.*;
 
 @Service
+@Slf4j
 public class EmployeeServices {
 
-    @Autowired
-    private ThreadPool2 threadPool2;
     @Autowired
     EmployeeRepo employeeRepo;
 
@@ -32,45 +32,110 @@ public class EmployeeServices {
     JdbcTemplate jdbcTemplate;
 
     @Transactional
-    public void insertEmployee(){
+    public void insertEmployee(int size, int type) {
         long startTime = System.currentTimeMillis();
         List<Employee> empList = new ArrayList<>();
-        for (int i = 0; i < 5000; i++) {
+        for (int i = 0; i < size; i++) {
             empList.add(generateEmployee(i));
         }
-        insertAllEmployees(empList);
+        insertAllEmployees(empList, type);
         long endTime = System.currentTimeMillis();
-        System.out.println("Processing time: " + (endTime - startTime));
+        log.info("Processing time : {}", endTime - startTime);
     }
+
+//    private Employee generateEmployee(int index) {
+//        return Employee.builder()
+//                .address("No " + index + " Le trong tan")
+//                .name("Employee " + index)
+//                .checkemail(0)
+//                .build();
+//    }
 
     private Employee generateEmployee(int index) {
         return Employee.builder()
-                .address("No " + index + " Le trong tan")
+                .address("No " + index + " Le Trong Tan")
                 .name("Employee " + index)
                 .checkemail(0)
                 .build();
     }
 
-    private void insertAllEmployees(List<Employee> employees) {
-        multiThreadInsert(employees);
-//        employeeRepo.saveAll(employees);
-//        batchInsert(employees);
-    }
+//    private void insertAllEmployees(List<Employee> employees, int type) {
+//        switch (type) {
+//            case 0:
+//                employeeRepo.saveAll(employees);
+//                break;
+//            case 1:
+//                multiThreadInsert(employees);
+//                break;
+//            default:
+//                batchInsert(employees);
+//        }
+//    }
 
+    //    private void multiThreadInsert(List<Employee> employees) {
+//        List<List<Employee>> output = ListUtils.partition(employees, 2000);
+//        ExecutorService executorService = Executors.newFixedThreadPool(10);
+//        List<Future> futures = new ArrayList<>();
+//        for (List<Employee> employeeList : output) {
+//            futures.add(executorService.submit(new Runnable() {
+//                @Override
+//                public void run() {
+//                    batchInsert(employeeList);
+//                }
+//            }));
+//        }
+//        for (Future future : futures) {
+//            try {
+//                future.get();
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            } catch (ExecutionException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//    }
     private void multiThreadInsert(List<Employee> employees) {
-        List<List<Employee>> output = ListUtils.partition(employees, 10);
-        ExecutorService executorService = Executors.newFixedThreadPool(10);
+        List<List<Employee>> output = ListUtils.partition(employees, 2000);
+        ExecutorService executor = Executors.newFixedThreadPool(10);
+        List<Future> futures = new ArrayList<>();
         for (List<Employee> employeeList : output) {
-            executorService.execute(new Runnable() {
+            futures.add(executor.submit(new Runnable() {
                 @Override
                 public void run() {
-                    employeeRepo.saveAll(employeeList);
+                    log.info("Inserting : " + employeeList.size() + " employees");
+                    batchInsert(employeeList);
                 }
-            });
+            }));
         }
+        for (Future future : futures) {
+            try {
+                future.get();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            } catch (ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        executor.shutdown();
     }
+//    private void batchInsert(List<Employee> employees) {
+//        jdbcTemplate.batchUpdate("insert into examplesp.employee (name, address) values(?,?)", new BatchPreparedStatementSetter() {
+//            @Override
+//            public void setValues(PreparedStatement ps, int i) throws SQLException {
+//                Employee item = employees.get(i);
+//                ps.setString(1, item.getName());
+//                ps.setString(2, item.getAddress());
+//            }
+//
+//            @Override
+//            public int getBatchSize() {
+//                return employees.size();
+//            }
+//        });
+//    }
+
     private void batchInsert(List<Employee> employees) {
-        jdbcTemplate.batchUpdate("insert into examplesp.employee (name, address) values(?,?)", new BatchPreparedStatementSetter() {
+        jdbcTemplate.batchUpdate("insert into examplesp.employee (name, address) values (?,?)", new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 Employee item = employees.get(i);
@@ -83,6 +148,17 @@ public class EmployeeServices {
                 return employees.size();
             }
         });
+    }
+
+    private void insertAllEmployees(List<Employee> employees, int type) {
+        switch (type) {
+            case 0:
+                employeeRepo.saveAll(employees);
+            case 1:
+                multiThreadInsert(employees);
+            default:
+                batchInsert(employees);
+        }
     }
 
 
@@ -99,7 +175,7 @@ public class EmployeeServices {
         return employeeDTO;
     }
 
-    public void deleteEmployeeById(Long id){
+    public void deleteEmployeeById(Long id) {
         employeeRepo.deleteById(id);
     }
 

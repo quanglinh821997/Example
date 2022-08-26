@@ -1,14 +1,19 @@
 spring:
   jpa:
-    hibernate:
-      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQLDialect
+#    hibernate:
+#      ddl-auto: update
+#      dialect: org.hibernate.dialect.MySQL
+#      database-platform: org.hibernate.dialect.MySQL
 #    properties:
 #      hibernate:
 #        format_sql: true
-    show-sql: true
+#    show-sql: true
   datasource:
     username: root
+    password:
     url: jdbc:mysql://localhost:3306/examplesp?useSSL=false
+    driverClassName: com.mysql.jdbc.Driver
   mail:
     host: smtp.gmail.com
     port: 587
@@ -20,12 +25,9 @@ spring:
           auth: true
           starttls:
             enable: true
-logging:
-  level:
-    org:
-      hibernate:
-        SQL: DEBUG
-      springframework:
-        jdbc:
-          core:
-            JdbcTemplate: DEBUG
+#logging:
+#  level:
+#    org:
+#      hibernate:
+#        SQL: DEBUG
+#      springframework: DEBUG
